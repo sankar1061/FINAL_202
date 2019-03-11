@@ -20,6 +20,7 @@ use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Http\Response;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
+use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
 use Novalnet\Helper\PaymentHelper;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Novalnet\Services\PaymentService;
@@ -59,6 +60,11 @@ class PaymentController extends Controller
 	private $basketRepository;
 
 	/**
+     * @var AddressRepositoryContract
+     */
+    private $addressRepository;
+	
+	/**
 	 * @var PaymentService
 	 */
 	private $paymentService;
@@ -89,6 +95,7 @@ class PaymentController extends Controller
 								  Response $response,
 								  ConfigRepository $config,
 								  PaymentHelper $paymentHelper,
+				   				  AddressRepositoryContract $addressRepository,
 								  FrontendSessionStorageFactoryContract $sessionStorage,
 								  BasketRepositoryContract $basketRepository,
 								  PaymentService $paymentService,
@@ -100,6 +107,7 @@ class PaymentController extends Controller
 		$this->response        = $response;
 		$this->paymentHelper   = $paymentHelper;
 		$this->sessionStorage  = $sessionStorage;
+		$this->addressRepository = $addressRepository;
 		$this->basketRepository  = $basketRepository;
 		$this->paymentService  = $paymentService;
 		$this->twig            = $twig;
