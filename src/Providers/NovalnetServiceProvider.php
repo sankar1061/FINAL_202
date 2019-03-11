@@ -243,7 +243,7 @@ class NovalnetServiceProvider extends ServiceProvider
                                                                     'nnPaymentProcessUrl' => $paymentProcessUrl,
                                                                     'paymentMopKey'     =>  $paymentKey,
 								    'endcustomername'=> $address->firstName .' '. $address->lastName,
-                                                                    'nnGuaranteeStatus' =>  $guaranteeStatus
+                                                                    'nnGuaranteeStatus' =>  empty($address->companyName) ? $guaranteeStatus : ''
                                                  ]);
                                 }
                             } else {
@@ -267,7 +267,7 @@ class NovalnetServiceProvider extends ServiceProvider
 											$content = $twig->render('Novalnet::PaymentForm.NOVALNET_INVOICE', [
 																'nnPaymentProcessUrl' => $paymentProcessUrl,
 																'paymentMopKey'     =>  $paymentKey,
-																'nnGuaranteeStatus' =>  $guaranteeStatus
+																'nnGuaranteeStatus' =>  empty($address->companyName) ? $guaranteeStatus : ''
 											]);
 											$contentType = 'htmlContent';
 										 }
