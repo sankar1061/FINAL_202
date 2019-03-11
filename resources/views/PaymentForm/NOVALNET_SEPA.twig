@@ -17,7 +17,7 @@
 						<div class="row">
 							<div class="col-xs-12 col-sm-12">
 								<div data-model="nn_invoice_birthday" class="input-unit">
-									<input type="text" name="nn_sepa_cardholder" autocomplete="off" id="nn_sepa_cardholder"> 
+									<input type="text" name="nn_sepa_cardholder" value="{{endcustomername}}" id="nn_sepa_cardholder"> 
 									<label for="sepa_holder">{{trans("Novalnet::PaymentMethod.sepa_account_holder_label")}}*</label>
 								</div>
 								<div data-model="nn_invoice_birthday" class="input-unit">
@@ -25,7 +25,7 @@
 									<label for="sepa_iban">{{trans("Novalnet::PaymentMethod.sepa_iban_label")}}*</label>
 								</div>
 								{% if nnGuaranteeStatus == "guarantee" %}
-									<div data-model="nn_invoice_birthday" class="input-unit">
+									<div data-model="nn_sepa_birthday" class="input-unit">
 										<input type="date" name="nn_sepa_birthday" id="nn_sepa_birthday">
 										<label for="nn_sepa_birthday">{{trans("Novalnet::PaymentMethod.birthdate_label")}}</label>
 									</div>
