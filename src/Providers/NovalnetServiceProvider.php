@@ -240,16 +240,16 @@ class NovalnetServiceProvider extends ServiceProvider
                                 }
                                 else
                                 {
-				$show_dob = false;
+				/*$show_dob = false;
 				if($guaranteeStatus == 'guarantee') {
 			          $show_dob = ! empty($address->companyName) ? false : true;
-				}
+				} */
                                 $content = $twig->render('Novalnet::PaymentForm.NOVALNET_SEPA', [
                                                                     'nnPaymentProcessUrl' => $paymentProcessUrl,
                                                                     'paymentMopKey'     =>  $paymentKey,
 								    'endcustomername'=> $address->firstName .' '. $address->lastName,
-                                                                    //'nnGuaranteeStatus' => $guaranteeStatus,
-								    'nnGuaranteeStatus_show_dob' => $show_dob
+                                                                    'nnGuaranteeStatus' => $guaranteeStatus
+								   // 'nnGuaranteeStatus_show_dob' => $show_dob
                                                  ]);
                                 }
                             } else {
