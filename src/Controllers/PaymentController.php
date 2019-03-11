@@ -171,7 +171,7 @@ class PaymentController extends Controller
 				$force_status = ( $requestData['paymentKey'] == 'NOVALNET_SEPA' ) ? 'Novalnet.novalnet_sepa_payment_guarantee_force_active' : 'Novalnet.novalnet_invoice_payment_guarantee_force_active';				
 				
 				// Proceed as Normal Payment if condition for birthdate doesn't meet as well as force is enable    
-				if ($this->config->get( $force_status ) == 'true' && empty($address->companyName) && (empty($birthday) || time() < strtotime('+18 years', strtotime($birthday)))) {	
+				if ($this->config->get( $force_status ) == 'true' && (empty($birthday) || time() < strtotime('+18 years', strtotime($birthday)))) {	
 					if( $requestData['paymentKey'] == 'NOVALNET_SEPA' ) {
 					$serverRequestData['data']['payment_type'] = 'DIRECT_DEBIT_SEPA';
 					$serverRequestData['data']['key']          = '37';
@@ -181,7 +181,7 @@ class PaymentController extends Controller
 					}
 					
 				}
-				else if( empty($address->companyName) && empty( $birthday ) )
+				else if(empty( $birthday ) )
 				{			
 					$notifications = json_decode($this->sessionStorage->getPlugin()->getValue('notifications'));
 					array_push($notifications,[
@@ -192,7 +192,7 @@ class PaymentController extends Controller
 					$this->sessionStorage->getPlugin()->setValue('notifications', json_encode($notifications));
 					return $this->response->redirectTo('checkout');
 				}
-				else if(empty($address->companyName) && time() < strtotime('+18 years', strtotime($birthday)))
+				else if( time() < strtotime('+18 years', strtotime($birthday)))
 				{
 			
 					$notifications = json_decode($this->sessionStorage->getPlugin()->getValue('notifications'));
