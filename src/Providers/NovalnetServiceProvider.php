@@ -241,7 +241,7 @@ class NovalnetServiceProvider extends ServiceProvider
                                 else
                                 {
 				$show_dob = false;
-				if($guaranteeStatus) {
+				if($guaranteeStatus == 'guarantee') {
 			          $show_dob = ! empty($address->companyName) ? false : true;
 				}
                                 $content = $twig->render('Novalnet::PaymentForm.NOVALNET_SEPA', [
