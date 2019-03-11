@@ -1,5 +1,5 @@
 <?php
-namespace Novalnet;
+namespace Novalnet\Constants;
 
 /**
  * Class NovalnetConstants
