@@ -118,7 +118,7 @@ class RefundEventProcedure
 				$responseData =$this->paymentHelper->convertStringToArray($response['response'], '&');
 				$this->getLogger(__METHOD__)->error('some', $responseData);
 				if ($responseData['status'] == '100') {
-					$transactionComments . ='refund';
+					$transactionComments .= 'refund';
 					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $tid, (float) $orderAmount * 100);
 					 $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
 					} else {
