@@ -227,6 +227,9 @@ class NovalnetServiceProvider extends ServiceProvider
                             $contentType = 'htmlContent';
 						} elseif($paymentKey == 'NOVALNET_SEPA') {
                                 $paymentProcessUrl = $paymentService->getProcessPaymentUrl();
+				$basket = $basketRepository->load();			
+				$billingAddressId = $basket->customerInvoiceAddressId;
+        			$address = $this->addressRepository->findAddressById($billingAddressId);
                                 $contentType = 'htmlContent';
                                 $guaranteeStatus = $paymentService->getGuaranteeStatus($basketRepository->load(), $paymentKey);
 
