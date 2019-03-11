@@ -21,6 +21,7 @@ use Novalnet\Helper\PaymentHelper;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Novalnet\Services\PaymentService;
 use Novalnet\Constants\NovalnetConstants;
+use Novalnet\Services\TransactionService;
 
 /**
  * Class RefundEventProcedure
@@ -42,17 +43,23 @@ class RefundEventProcedure
 	private $paymentService;
 	
 	/**
+	 * @var transaction
+	 */
+	private $transaction;
+	
+	/**
 	 * Constructor.
 	 *
 	 * @param PaymentHelper $paymentHelper
 	 * @param PaymentService $paymentService
 	 */
 	 
-    public function __construct( PaymentHelper $paymentHelper, 
+    public function __construct( PaymentHelper $paymentHelper, TransactionService $tranactionService,
 								 PaymentService $paymentService)
     {
         $this->paymentHelper   = $paymentHelper;
 	    $this->paymentService  = $paymentService;
+	    $this->transaction          = $tranactionService;
 	}	
 	
     /**
@@ -71,7 +78,8 @@ class RefundEventProcedure
 	   $orderAmount = (float) $order->amounts[0]->invoiceTotal;
 	   $paymentKey = $paymentDetails[0]->method->paymentKey;
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
-	   
+	    $details = $this->transaction->getTransactionData('order_no', $order->id);
+	   $this->getLogger(__METHOD__)->error('refund', $details);
 	    foreach ($paymentDetails as $paymentDetail)
 		{
 			$property = $paymentDetail->properties;
