@@ -645,7 +645,7 @@ class PaymentHelper
 		    $this->createOrderComments((int)$order->id, $transactionComments);
 		    $this->updatePayments($tid, $responseData['tid_status'], $order->id);
 	     } else {
-	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
+	           $error = $this->getNovalnetStatusText($responseData);
 		   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
 	     }
 	
