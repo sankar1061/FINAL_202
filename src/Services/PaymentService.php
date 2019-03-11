@@ -24,7 +24,7 @@ use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Novalnet\Helper\PaymentHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Frontend\Services\AccountService;
-use Novalnet\NovalnetConstants;
+use Novalnet\Constants\NovalnetConstants;
 use Novalnet\Services\TransactionService;
 
 /**
