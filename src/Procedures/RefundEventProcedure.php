@@ -113,6 +113,7 @@ class RefundEventProcedure
 					} else {
 					$error = $this->paymentHelper->getNovalnetStatusText($responseData);
 					$this->getLogger(__METHOD__)->error('Novalnet::doRefundError', $error);
+				}
 				} catch (\Exception $e) {
 						$this->getLogger(__METHOD__)->error('Novalnet::doRefund', $e);
 					}
