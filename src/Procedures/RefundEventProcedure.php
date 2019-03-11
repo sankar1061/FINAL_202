@@ -106,9 +106,14 @@ class RefundEventProcedure
 					 ];
 					
 					 $response = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
+					  $responseData =$this->convertStringToArray($response['response'], '&');	 
+				if ($responseData['status'] == '100') {
 					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $tid, (float) $orderAmount * 100);
 					 $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
-					} catch (\Exception $e) {
+					} else {
+					$error = $this->paymentHelper->getNovalnetStatusText($responseData);
+					$this->getLogger(__METHOD__)->error('Novalnet::doRefundError', $error);
+				} catch (\Exception $e) {
 						$this->getLogger(__METHOD__)->error('Novalnet::doRefund', $e);
 					}
 				
