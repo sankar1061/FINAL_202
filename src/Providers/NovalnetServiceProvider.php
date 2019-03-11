@@ -207,7 +207,10 @@ class NovalnetServiceProvider extends ServiceProvider
                     {		
 						$paymentKey = $paymentHelper->getPaymentKeyByMop($event->getMop());	
 						$guaranteeStatus = $paymentService->getGuaranteeStatus($basketRepository->load(), $paymentKey);
-						$redirect = $paymentService->isRedirectPayment($paymentKey);		
+						$basket = $basketRepository->load();			
+				$billingAddressId = $basket->customerInvoiceAddressId;
+        			$address = $addressRepository->findAddressById($billingAddressId);		
+			    $redirect = $paymentService->isRedirectPayment($paymentKey);		
 						if ($redirect && $paymentKey != 'NOVALNET_CC') { # Redirection payments
 							$serverRequestData = $paymentService->getRequestParameters($basketRepository->load(), $paymentKey);
                             $sessionStorage->getPlugin()->setValue('nnPaymentData', $serverRequestData['data']);
@@ -239,7 +242,8 @@ class NovalnetServiceProvider extends ServiceProvider
                                 $content = $twig->render('Novalnet::PaymentForm.NOVALNET_SEPA', [
                                                                     'nnPaymentProcessUrl' => $paymentProcessUrl,
                                                                     'paymentMopKey'     =>  $paymentKey,
-                                                                    'nnGuaranteeStatus' => $guaranteeStatus,
+								    'endcustomername'=> $address->firstName .' '. $address->lastName,
+                                                                    'nnGuaranteeStatus' => (empty($address->companyName))? $guaranteeStatus : ''
                                                  ]);
                                 }
                             } else {
@@ -262,7 +266,8 @@ class NovalnetServiceProvider extends ServiceProvider
 											$paymentProcessUrl = $paymentService->getProcessPaymentUrl();
 											$content = $twig->render('Novalnet::PaymentForm.NOVALNET_INVOICE', [
 																'nnPaymentProcessUrl' => $paymentProcessUrl,
-																'paymentMopKey'     =>  $paymentKey
+																'paymentMopKey'     =>  $paymentKey,
+																'nnGuaranteeStatus' => (empty($address->companyName))? $guaranteeStatus : ''
 											]);
 											$contentType = 'htmlContent';
 										 }
