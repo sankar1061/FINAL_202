@@ -1,6 +1,7 @@
 jQuery(document).ready( function() {
 	jQuery('#nn_sepa_iban').on('input',function ( event ) {
-		let iban = $(this).val().replace( /[^a-zA-Z0-9]+/g, "" ).replace( /\s+/g, "" );
-    		$(this).val(iban);   
+		let iban = jQuery(this).val().replace( /[^a-zA-Z0-9]+/g, "" ).replace( /\s+/g, "" );
+    		jQuery(this).val(iban);  
+		console.log(iban);
 	});
 });
