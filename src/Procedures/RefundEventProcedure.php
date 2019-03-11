@@ -20,6 +20,7 @@ use Plenty\Plugin\Log\Loggable;
 use Novalnet\Helper\PaymentHelper;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Novalnet\Services\PaymentService;
+use Novalnet\Constants\NovalnetConstants;
 
 /**
  * Class RefundEventProcedure
@@ -104,7 +105,7 @@ class RefundEventProcedure
 					'lang'           => 'EN'   
 					 ];
 					
-					 $response = $this->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
+					 $response = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
 					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $tid, (float) $orderAmount * 100);
 					 $this->createOrderComments((int)$orderId, $transactionComments);
 					} catch (\Exception $e) {
