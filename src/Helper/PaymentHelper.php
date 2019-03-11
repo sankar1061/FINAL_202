@@ -627,7 +627,7 @@ class PaymentHelper
 		
 	     $response = $this->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
 	     $responseData =$this->convertStringToArray($response['response'], '&');
-	
+	     if ($responseData['status'] == '100') {
 	     if($responseData['tid_status'] == '100') {
 			if (in_array($key, ['6', '34', '37', '40', '41'])) {
 	        $paymentData['currency']    = $paymentDetails[0]->currency;
@@ -644,7 +644,12 @@ class PaymentHelper
 	      }
 		    $this->createOrderComments((int)$order->id, $transactionComments);
 		    $this->updatePayments($tid, $responseData['tid_status'], $order->id);
-		  } catch (\Exception $e) {
+	     } else {
+	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
+		   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
+	     }
+	
+	} catch (\Exception $e) {
 			$this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $e);
 		  }
 	}
