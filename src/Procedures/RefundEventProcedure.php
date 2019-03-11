@@ -72,13 +72,14 @@ class RefundEventProcedure
         /* @var $order Order */
 	 
 	   $order = $eventTriggered->getOrder(); 
-	  
+	  $this->getLogger(__METHOD__)->error('refund1', $order);
 	   $payments = pluginApp(\Plenty\Modules\Payment\Contracts\PaymentRepositoryContract::class);  
        $paymentDetails = $payments->getPaymentsByOrderId($order->id);
 	   $orderAmount = (float) $order->amounts[0]->invoiceTotal;
 	   $paymentKey = $paymentDetails[0]->method->paymentKey;
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
 	    $details = $this->transaction->getTransactionData('orderNo', $order->id);
+	    
 	   $this->getLogger(__METHOD__)->error('refund', $details);
 	    foreach ($paymentDetails as $paymentDetail)
 		{
