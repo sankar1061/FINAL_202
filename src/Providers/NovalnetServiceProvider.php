@@ -229,7 +229,7 @@ class NovalnetServiceProvider extends ServiceProvider
                                 $paymentProcessUrl = $paymentService->getProcessPaymentUrl();
 				$basket = $basketRepository->load();			
 				$billingAddressId = $basket->customerInvoiceAddressId;
-        			$address = $this->addressRepository->findAddressById($billingAddressId);
+        			$address = $addressRepository->findAddressById($billingAddressId);
                                 $contentType = 'htmlContent';
                                 $guaranteeStatus = $paymentService->getGuaranteeStatus($basketRepository->load(), $paymentKey);
 
