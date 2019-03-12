@@ -92,10 +92,8 @@ class RefundEventProcedure
 			}
 		}
         $this->getLogger(__METHOD__)->error('EventProcedure.triggerFunction', ['order' => $order]);
-        $this->getLogger(__METHOD__)->error('status', $status);
-	    $this->getLogger(__METHOD__)->error('status1', $order->amounts[0]->paidAmount);
-	    $this->getLogger(__METHOD__)->error('status2', $orderAmount);
-	    if ($status == '100' && ($order->amounts[0]->paidAmount) == $orderAmount)   
+       
+	    if ($status == '100')   
 	    { 
 		    $this->getLogger(__METHOD__)->error('enter', $responseData);
 			try {
