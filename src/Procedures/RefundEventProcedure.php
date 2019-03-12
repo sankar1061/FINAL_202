@@ -115,7 +115,15 @@ class RefundEventProcedure
 				if ($responseData['status'] == '100') {
 					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
 					 $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
-					} else {
+					$paymentData['currency']    = $paymentDetails[0]->currency;
+					$paymentData['paid_amount'] = (float) $orderAmount;
+					$paymentData['tid']         = $parentOrder[0]->tid;
+					$paymentData['order_no']    = $order->id;
+					$paymentData['type']        = 'debit';
+					$paymentData['mop']         = $paymentDetails[0]->mopId;
+
+					$this->paymentHelper->createPlentyPayment($paymentData);	
+				} else {
 					$error = $this->paymentHelper->getNovalnetStatusText($responseData);
 					$this->getLogger(__METHOD__)->error('Novalnet::doRefundError', $error);
 				}
@@ -123,14 +131,7 @@ class RefundEventProcedure
 						$this->getLogger(__METHOD__)->error('Novalnet::doRefund', $e);
 					}
 				
-				$paymentData['currency']    = $paymentDetails[0]->currency;
-				$paymentData['paid_amount'] = (float) $orderAmount;
-				$paymentData['tid']         = $parentOrder[0]->tid;
-				$paymentData['order_no']    = $order->id;
-				$paymentData['type']        = 'debit';
-				$paymentData['mop']         = $paymentDetails[0]->mopId;
 				
-				$this->paymentHelper->createPlentyPayment($paymentData);
 	    }
     }
 }
