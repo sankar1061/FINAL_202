@@ -50,8 +50,7 @@ function novalnetCcIframe()
 window.addEventListener(
 	'message', function (e) {
 	var data = (typeof e.data === 'string') ? eval('(' + e.data + ')') : e.data;
-		console.log(data['hash']);
-		console.log(data['unique_id']);
+		
 	if (e.origin === 'https://secure.novalnet.de') {
 		if (data['callBack'] == 'getHash') {
 			if (data['error_message'] != undefined) {
