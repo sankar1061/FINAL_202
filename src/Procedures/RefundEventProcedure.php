@@ -81,8 +81,9 @@ class RefundEventProcedure
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
 	   $parentOrder = $this->transaction->getTransactionData('orderNo', $order->id);
 	
-	    foreach ($paymentDetails[0] as $paymentDetail)
+	    foreach ($paymentDetails as $paymentDetail)
 		{
+		    $this->getLogger(__METHOD__)->error('details', $paymentDetail);
 			$property = $paymentDetail->properties;
 			foreach($property as $proper)
 			{
