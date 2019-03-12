@@ -106,7 +106,7 @@ class RefundEventProcedure
 					'tid'            => $parentOrder[0]->tid, 
 					 'refund_param'  => (float) $orderAmount * 100 ,
 					'remote_ip'      => $this->paymentHelper->getRemoteAddress(),
-					'lang'           => 'EN'   
+					'lang'           => 'DE'   
 					 ];
 					
 					 $response = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
