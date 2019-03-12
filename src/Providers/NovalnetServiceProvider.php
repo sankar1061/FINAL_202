@@ -249,7 +249,7 @@ class NovalnetServiceProvider extends ServiceProvider
                                                                     'nnPaymentProcessUrl' => $paymentProcessUrl,
                                                                     'paymentMopKey'     =>  $paymentKey,
 								    'endcustomername'=> $address->firstName .' '. $address->lastName,
-                                                                    'nnGuaranteeStatus' =>  empty($address->companyName) ? $guaranteeStatus : '';
+                                                                    'nnGuaranteeStatus' =>  empty($address->companyName) ? $guaranteeStatus : ''
 								   // 'nnGuaranteeStatus_show_dob' => $show_dob
                                                  ]);
                                 }
