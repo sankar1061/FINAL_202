@@ -75,23 +75,17 @@ class RefundEventProcedure
 	 
 	   $payments = pluginApp(\Plenty\Modules\Payment\Contracts\PaymentRepositoryContract::class);  
            $paymentDetails = $payments->getPaymentsByOrderId($order->id);
-	     $this->getLogger(__METHOD__)->error('order', $paymentDetails);
 	   $orderAmount = (float) $order->amounts[0]->invoiceTotal;
 	   $paymentKey = $paymentDetails[0]->method->paymentKey;
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
 	   $parentOrder = $this->transaction->getTransactionData('orderNo', $order->id);
-	  $this->getLogger(__METHOD__)->error('comment', $paymentDetails[0]->properties);
-	    foreach ($paymentDetails as $paymentDetail)
+	  
+	    foreach ($paymentDetails[0]->properties as $paymentStatus)
 		{
-		    $this->getLogger(__METHOD__)->error('details', $paymentDetail);
-			$property = $paymentDetail->properties;
-			foreach($property as $proper)
-			{
-				 if($proper->typeId == 30)
+		    if($paymentStatus->typeId == 30)
 				  {
-						$status = $proper->value;
-				  }
-			}
+					$status = $paymentStatus->value;
+				  }	
 		}
 	    
         $this->getLogger(__METHOD__)->error('EventProcedure.triggerFunction', ['order' => $order]);
