@@ -618,8 +618,7 @@ class PaymentHelper
 	    'remote_ip'      => $this->getRemoteAddress(),
 	    'lang'           => 'DE'  
 	     ];
-		$lang = strtoupper($this->sessionStorage->getLocaleSettings()->language);
-		$this->getLogger(__METHOD__)->error('lang', $lang);
+		
 	    if($capture) {
 			$paymentRequestData['status'] = '100';
 	  } else {
@@ -631,7 +630,7 @@ class PaymentHelper
 	     if ($responseData['status'] == '100') {
 	     if($responseData['tid_status'] == '100') {
 			if (in_array($key, ['6', '34', '37', '40', '41'])) {
-	        $paymentData['currency']    = $paymentDetails[0]->currency;
+	        	$paymentData['currency']    = $paymentDetails[0]->currency;
 			$paymentData['paid_amount'] = (float) $order->amounts[0]->invoiceTotal;
 			$paymentData['tid']         = $tid;
 			$paymentData['order_no']    = $order->id;
