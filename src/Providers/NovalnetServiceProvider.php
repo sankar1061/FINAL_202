@@ -211,7 +211,7 @@ class NovalnetServiceProvider extends ServiceProvider
 				$billingAddressId = $basket->customerInvoiceAddressId;
         			$address = $addressRepository->findAddressById($billingAddressId);
 			    $this->getLogger(__METHOD__)->error('address', $address->name1);
-			     $this->getLogger(__METHOD__)->error('address', $address->companyName);
+			     $this->getLogger(__METHOD__)->error('address', $address->company);
 			    $redirect = $paymentService->isRedirectPayment($paymentKey);		
 						if ($redirect && $paymentKey != 'NOVALNET_CC') { # Redirection payments
 							$serverRequestData = $paymentService->getRequestParameters($basketRepository->load(), $paymentKey);
@@ -272,7 +272,7 @@ class NovalnetServiceProvider extends ServiceProvider
 										{
 											$processDirect = false;
 											$paymentProcessUrl = $paymentService->getProcessPaymentUrl();
-											if ($guaranteeStatus == 'guarantee' && empty($address->companyName)) {
+											if ($guaranteeStatus == 'guarantee' && empty($address->company)) {
 											$content = $twig->render('Novalnet::PaymentForm.NOVALNET_INVOICE', [
 																'nnPaymentProcessUrl' => $paymentProcessUrl,
 																'paymentMopKey'     =>  $paymentKey
