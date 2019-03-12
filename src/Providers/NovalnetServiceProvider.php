@@ -272,7 +272,7 @@ class NovalnetServiceProvider extends ServiceProvider
 										{
 											$processDirect = false;
 											$paymentProcessUrl = $paymentService->getProcessPaymentUrl();
-											if ($guaranteeStatus == 'guarantee' && empty($address->companyName))
+											if ($guaranteeStatus == 'guarantee' && empty($address->companyName)) {
 											$content = $twig->render('Novalnet::PaymentForm.NOVALNET_INVOICE', [
 																'nnPaymentProcessUrl' => $paymentProcessUrl,
 																'paymentMopKey'     =>  $paymentKey
