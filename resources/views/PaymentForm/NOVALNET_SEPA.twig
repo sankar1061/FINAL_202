@@ -24,7 +24,7 @@
 						<input type="text" name="nn_sepa_iban" autocomplete="off" id="nn_sepa_iban">
 									<label for="sepa_iban">{{trans("Novalnet::PaymentMethod.sepa_iban_label")}}*</label>
 								</div>
-								{% if nnGuaranteeStatus %}
+								{% if nnGuaranteeStatus == "guarantee" %}
 									<div data-model="nn_sepa_birthday" class="input-unit">
 										<input type="date" name="nn_sepa_birthday" id="nn_sepa_birthday">
 										<label for="nn_sepa_birthday">{{trans("Novalnet::PaymentMethod.birthdate_label")}}</label>
