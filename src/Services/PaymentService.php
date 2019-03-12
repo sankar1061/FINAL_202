@@ -139,7 +139,8 @@ class PaymentService
             'payment_name'     => $nnPaymentData['payment_method'],
             'order_no'         => $nnPaymentData['order_no'],
         ];
-		
+	if(in_array($nnPaymentData['payment_id'], ['27', '59']) || (in_array($nnPaymentData['tid_status'], ['85','86','90'])))
+            $nnPaymentData['callback_amount'] = 0;	
         $this->transactionLogData->saveTransaction($transactionData);
         
         if(!$this->isRedirectPayment(strtoupper($nnPaymentData['payment_method']))) {
