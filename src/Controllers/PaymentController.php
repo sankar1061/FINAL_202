@@ -140,7 +140,7 @@ class PaymentController extends Controller
 		$requestData = $this->request->all();
 		$basket = $this->basketRepository->load();
 		$billingAddressId = $basket->customerInvoiceAddressId;
-        	$address = $this->addressRepository->findAddressById($billingAddressId);
+        $address = $this->addressRepository->findAddressById($billingAddressId);
 		$serverRequestData = $this->paymentService->getRequestParameters($this->basketRepository->load(), $requestData['paymentKey']);
 		$this->sessionStorage->getPlugin()->setValue('nnPaymentData', $serverRequestData['data']);
 		$guarantee_payments = [ 'NOVALNET_SEPA', 'NOVALNET_INVOICE' ];        
@@ -181,7 +181,7 @@ class PaymentController extends Controller
 					}
 					
 				}
-				else if(empty( $birthday ) )
+				else if( empty( $birthday ) && empty( $address->companyName ) )
 				{			
 					$notifications = json_decode($this->sessionStorage->getPlugin()->getValue('notifications'));
 					array_push($notifications,[
@@ -207,7 +207,7 @@ class PaymentController extends Controller
 				else
 				{
 			
-			// Guarantee Params Formation 
+					// Guarantee Params Formation 
 					if( $requestData['paymentKey'] == 'NOVALNET_SEPA' ) {
 					$serverRequestData['data']['payment_type'] = 'GUARANTEED_DIRECT_DEBIT_SEPA';
 					$serverRequestData['data']['key']          = '40';
