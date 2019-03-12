@@ -183,7 +183,7 @@ class PaymentController extends Controller
 					}
 					
 				}
-				else if( empty( $birthday ) && empty( $address->companyName ) )
+				else if( empty( $birthday ))
 				{			
 					$notifications = json_decode($this->sessionStorage->getPlugin()->getValue('notifications'));
 					array_push($notifications,[
