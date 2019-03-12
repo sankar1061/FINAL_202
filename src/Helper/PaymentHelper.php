@@ -616,9 +616,10 @@ class PaymentHelper
 	    'edit_status'    => '1', 
 	    'tid'            => $tid, 
 	    'remote_ip'      => $this->getRemoteAddress(),
-	    'lang'           => 'EN'  
+	    'lang'           => 'DE'  
 	     ];
-		
+		$lang = strtoupper($this->sessionStorage->getLocaleSettings()->language);
+		$this->getLogger(__METHOD__)->error('lang', $lang);
 	    if($capture) {
 			$paymentRequestData['status'] = '100';
 	  } else {
