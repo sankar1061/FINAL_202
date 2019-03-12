@@ -113,8 +113,6 @@ class RefundEventProcedure
 				$responseData =$this->paymentHelper->convertStringToArray($response['response'], '&');
 				
 				if ($responseData['status'] == '100') {
-					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
-					 $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
 					$paymentData['currency']    = $paymentDetails[0]->currency;
 					$paymentData['paid_amount'] = (float) $orderAmount;
 					$paymentData['tid']         = $parentOrder[0]->tid;
@@ -122,7 +120,10 @@ class RefundEventProcedure
 					$paymentData['type']        = 'debit';
 					$paymentData['mop']         = $paymentDetails[0]->mopId;
 
-					$this->paymentHelper->createPlentyPayment($paymentData);	
+					 $this->paymentHelper->createPlentyPayment($paymentData);	
+					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
+					 $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
+					
 				} else {
 					$error = $this->paymentHelper->getNovalnetStatusText($responseData);
 					$this->getLogger(__METHOD__)->error('Novalnet::doRefundError', $error);
