@@ -20,15 +20,19 @@ function initIframe()
 }
 
 function getHash(e)
-{
+{	
 	if($('#nn_pan_hash').val().trim() == '') {
-	iframeWindow.postMessage(
-		JSON.stringify(
-			{
-			'callBack': 'getHash',
-			}
-		), targetOrigin
-	);
+		e.preventDefault();
+		e.stopImmediatePropagation();
+		iframeWindow.postMessage(
+			JSON.stringify(
+				{
+				'callBack': 'getHash',
+				}
+			), targetOrigin
+		);
+	} else {
+		return true;
 	}
 }
 
@@ -78,4 +82,3 @@ $(document).ready(
 	);
 	}
 );
-
