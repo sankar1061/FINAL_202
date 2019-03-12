@@ -72,24 +72,20 @@ class RefundEventProcedure
         /* @var $order Order */
 	 
 	   $order = $eventTriggered->getOrder(); 
-	  $this->getLogger(__METHOD__)->error('refund1', $order);
+	 
 	   $payments = pluginApp(\Plenty\Modules\Payment\Contracts\PaymentRepositoryContract::class);  
-       $paymentDetails = $payments->getPaymentsByOrderId($order->id);
+           $paymentDetails = $payments->getPaymentsByOrderId($order->id);
 	   $orderAmount = (float) $order->amounts[0]->invoiceTotal;
 	   $paymentKey = $paymentDetails[0]->method->paymentKey;
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
-	    $details = $this->transaction->getTransactionData('orderNo', $order->id);
-	    
-	   $this->getLogger(__METHOD__)->error('refund', $details);
+	   $parentOrder = $this->transaction->getTransactionData('orderNo', $order->id);
+	    $this->getLogger(__METHOD__)->error('tid', $parentOrder[0]->tid);
+	   $this->getLogger(__METHOD__)->error('refunder', $parentOrder);
 	    foreach ($paymentDetails as $paymentDetail)
 		{
 			$property = $paymentDetail->properties;
 			foreach($property as $proper)
 			{
-				  if($proper->typeId == 1)
-				  {
-						$tid = $proper->value;
-				  }
 				 if($proper->typeId == 30)
 				  {
 						$status = $proper->value;
@@ -108,7 +104,7 @@ class RefundEventProcedure
 					'tariff'         => $this->paymentHelper->getNovalnetConfig('novalnet_tariff_id'),
 					'key'            => $key, 
 					'refund_request' => 1, 
-					'tid'            => $tid, 
+					'tid'            => $parentOrder[0]->tid, 
 					 'refund_param'  => (float) $orderAmount * 100 ,
 					'remote_ip'      => $this->paymentHelper->getRemoteAddress(),
 					'lang'           => 'EN'   
@@ -119,8 +115,7 @@ class RefundEventProcedure
 				$responseData =$this->paymentHelper->convertStringToArray($response['response'], '&');
 				$this->getLogger(__METHOD__)->error('some', $responseData);
 				if ($responseData['status'] == '100') {
-					$transactionComments .= 'refund';
-					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $tid, (float) $orderAmount * 100);
+					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
 					 $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
 					} else {
 					$error = $this->paymentHelper->getNovalnetStatusText($responseData);
@@ -132,7 +127,7 @@ class RefundEventProcedure
 				
 				$paymentData['currency']    = $paymentDetails[0]->currency;
 				$paymentData['paid_amount'] = (float) $orderAmount;
-				$paymentData['tid']         = $tid;
+				$paymentData['tid']         = $parentOrder[0]->tid;
 				$paymentData['order_no']    = $order->id;
 				$paymentData['type']        = 'debit';
 				$paymentData['mop']         = $paymentDetails[0]->mopId;
