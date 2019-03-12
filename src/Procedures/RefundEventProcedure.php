@@ -81,7 +81,7 @@ class RefundEventProcedure
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
 	   $parentOrder = $this->transaction->getTransactionData('orderNo', $order->id);
 	
-	    foreach ($paymentDetails as $paymentDetail)
+	    foreach ($paymentDetails[0] as $paymentDetail)
 		{
 			$property = $paymentDetail->properties;
 			foreach($property as $proper)
@@ -97,7 +97,7 @@ class RefundEventProcedure
        
 	    if ($status == 100)   
 	    { 
-		    $this->getLogger(__METHOD__)->error('enter', $responseData);
+		    $this->getLogger(__METHOD__)->error('success', $responseData);
 			try {
 				$paymentRequestData = [
 					'vendor'         => $this->paymentHelper->getNovalnetConfig('novalnet_vendor_id'),
