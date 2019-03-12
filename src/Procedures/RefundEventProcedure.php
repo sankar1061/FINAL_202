@@ -80,7 +80,7 @@ class RefundEventProcedure
 	   $paymentKey = $paymentDetails[0]->method->paymentKey;
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
 	   $parentOrder = $this->transaction->getTransactionData('orderNo', $order->id);
-	
+	  $this->getLogger(__METHOD__)->error('comment', $paymentDetails[0]->properties);
 	    foreach ($paymentDetails as $paymentDetail)
 		{
 		    $this->getLogger(__METHOD__)->error('details', $paymentDetail);
@@ -93,12 +93,12 @@ class RefundEventProcedure
 				  }
 			}
 		}
-	     $this->getLogger(__METHOD__)->error('entryyy', $status);
+	    
         $this->getLogger(__METHOD__)->error('EventProcedure.triggerFunction', ['order' => $order]);
        
 	    if ($status == 100)   
 	    { 
-		    $this->getLogger(__METHOD__)->error('success', $responseData);
+		    
 			try {
 				$paymentRequestData = [
 					'vendor'         => $this->paymentHelper->getNovalnetConfig('novalnet_vendor_id'),
@@ -115,7 +115,7 @@ class RefundEventProcedure
 					
 					 $response = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
 				$responseData =$this->paymentHelper->convertStringToArray($response['response'], '&');
-				$this->getLogger(__METHOD__)->error('hfd', $responseData);
+				
 				if ($responseData['status'] == '100') {
 					$paymentData['currency']    = $paymentDetails[0]->currency;
 					$paymentData['paid_amount'] = (float) $orderAmount;
