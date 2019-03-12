@@ -79,8 +79,7 @@ class RefundEventProcedure
 	   $paymentKey = $paymentDetails[0]->method->paymentKey;
 	   $key = $this->paymentService->getkeyByPaymentKey($paymentKey);
 	   $parentOrder = $this->transaction->getTransactionData('orderNo', $order->id);
-	    $this->getLogger(__METHOD__)->error('tid', $parentOrder[0]->tid);
-	   $this->getLogger(__METHOD__)->error('refunder', $parentOrder);
+	
 	    foreach ($paymentDetails as $paymentDetail)
 		{
 			$property = $paymentDetail->properties;
@@ -111,9 +110,8 @@ class RefundEventProcedure
 					 ];
 					
 					 $response = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
-				$this->getLogger(__METHOD__)->error('some', $response);
 				$responseData =$this->paymentHelper->convertStringToArray($response['response'], '&');
-				$this->getLogger(__METHOD__)->error('some', $responseData);
+				
 				if ($responseData['status'] == '100') {
 					 $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
 					 $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
