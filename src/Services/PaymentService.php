@@ -793,7 +793,7 @@ class PaymentService
 			    $transactionComments .= PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		      }
 			    $this->paymentHelper->createOrderComments((int)$order->id, $transactionComments);
-			    $this->updatePayments($tid, $responseData['tid_status'], $order->id);
+			    $this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
 	     } else {
 	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
 		   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
@@ -804,28 +804,5 @@ class PaymentService
 		  }
 	}
 	
-	/**
-     * Update the Plenty payment
-     * Return the Plenty payment object
-     *
-     * @param int $tid
-     * @param int $tid_status
-     * @param int $orderId
-     * @return null
-     */
-	public function updatePayments($tid, $tid_status, $orderId)
-    {	  
-        $payments = $this->paymentRepository->getPaymentsByOrderId($orderId);
-	    
-		foreach ($payments as $payment) {
-        $paymentProperty     = [];
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $tid);
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $tid);
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
-		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $tid_status);
-        $payment->properties = $paymentProperty;   
 	
-		$this->paymentRepository->updatePayment($payment);
-		}	   
-    }
 }
