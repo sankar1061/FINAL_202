@@ -629,7 +629,7 @@ class PaymentHelper
 	 */
 	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $InvoicePrepaymentDetails, $capture=false) 
 	{
-		$this->getLogger(__METHOD__)->error('name', $bank_name);
+		$this->getLogger(__METHOD__)->error('name', $InvoicePrepaymentDetails);
 	try {
 	$paymentRequestData = [
 	    'vendor'         => $this->getNovalnetConfig('novalnet_vendor_id'),
@@ -662,12 +662,8 @@ class PaymentHelper
 	    
 			$this->createPlentyPayment($paymentData);
 		    }
-		     $transactionComments = '';
-		     if (in_array($key, ['27','41'])) {
-		     $invoicePrepaymentDetails['tid'] = $tid;
-		     $transactionComments .= $this->paymentService->getInvoicePrepaymentComments($invoicePrepaymentDetails);
-		     }
-	             $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
+		   
+	             $transactionComments = PHP_EOL . sprintf($this->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 	      } else {
 		    $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 	      }
