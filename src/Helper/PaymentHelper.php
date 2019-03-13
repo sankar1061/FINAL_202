@@ -204,7 +204,7 @@ class PaymentHelper
 		  'invoice_iban'      => $requestData['invoice_iban'],
 		  'invoice_bic'       => $requestData['invoice_bic'],
 		  'due_date'          => $requestData['due_date'],
-		  'invoice_type'      => 'INVOICE',
+		  'invoice_type'      => $requestData['invoice_type'],
 		  'invoice_account_holder' => $requestData['invoice_account_holder']
 		];
   		$invoiceDetails = json_encode($invoicePrepaymentDetails);
@@ -213,7 +213,8 @@ class PaymentHelper
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $requestData['tid_status']);
-		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ACCOUNT_OF_RECEIVER, $invoiceDetails);
+		if ($requestData['invoice_type'] == 'INVOICE' && in_array($requestData['tid_status'], ['75', '91'])) {
+		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ACCOUNT_OF_RECEIVER, $invoiceDetails); }
 		$payment->properties = $paymentProperty;
 
 		$paymentObj = $this->paymentRepository->createPayment($payment);
@@ -609,112 +610,7 @@ class PaymentHelper
 		return $paymentDisplay;
 	}
 	
-	/**
-	 * Execute capture and void process
-	 *
-	 * @param object $order
-	 * @param object $paymentDetails
-	 * @param int $tid
-	 * @param int $key
-	 * @param bool $capture
-	 * @return none
-	 */
-	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $invoiceDetails, $capture=false) 
-	{
-	    $bankDetails = json_decode($invoiceDetails);
-		
-	try {
-	$paymentRequestData = [
-	    'vendor'         => $this->getNovalnetConfig('novalnet_vendor_id'),
-	    'auth_code'      => $this->getNovalnetConfig('novalnet_auth_code'),
-	    'product'        => $this->getNovalnetConfig('novalnet_product_id'),
-	    'tariff'         => $this->getNovalnetConfig('novalnet_tariff_id'),
-	    'key'            => $key, 
-	    'edit_status'    => '1', 
-	    'tid'            => $tid, 
-	    'remote_ip'      => $this->getRemoteAddress(),
-	    'lang'           => 'DE'  
-	     ];
-		
-	    if($capture) {
-			$paymentRequestData['status'] = '100';
-	     } else {
-			$paymentRequestData['status'] = '103';
-	    }
-		
-	     $response = $this->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
-	     $responseData =$this->convertStringToArray($response['response'], '&');
-	     if ($responseData['status'] == '100') {
-	     	if($responseData['tid_status'] == '100') {
-			$transactionComments = '';
-		       if (in_array($key, ['27', '41'])) {
-				$invoicePrepaymentDetails =  [
-					  'invoice_bankname'  => $bankDetails->invoice_bankname,
-					  'invoice_bankplace' => $bankDetails->invoice_bankplace,
-					  'amount'            => ($key == '41') ? (float) $order->amounts[0]->invoiceTotal : '0',
-					  'currency'          => $paymentDetails[0]->currency,
-					  'tid'               => $tid,
-					  'invoice_iban'      => $bankDetails->invoice_iban,
-					  'invoice_bic'       => $bankDetails->invoice_bic,
-					  'due_date'          => $bankDetails->due_date,
-					  'product'           => $this->getNovalnetConfig('novalnet_product_id'),
-					  'order_no'          => $order->id,
-					  'tid_status'        => $responseData['tid_status'],
-					  'invoice_type'      => 'INVOICE',
-					  'invoice_account_holder' => $bankDetails->invoice_account_holder
-					];       
-		       		}
-
-			if (in_array($key, ['6', '34', '37', '40', '41'])) {
-	        	$paymentData['currency']    = $paymentDetails[0]->currency;
-			$paymentData['paid_amount'] = (float) $order->amounts[0]->invoiceTotal;
-			$paymentData['tid']         = $tid;
-			$paymentData['order_no']    = $order->id;
-			$paymentData['mop']         = $paymentDetails[0]->mopId;
-	    
-			$this->createPlentyPayment($paymentData);
-		    	}
-		     $this->getLogger(__METHOD__)->error('bank', $invoicePrepaymentDetails);
-	             $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
-		      } else {
-			    $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
-		      }
-			    $this->createOrderComments((int)$order->id, $transactionComments);
-			    $this->updatePayments($tid, $responseData['tid_status'], $order->id);
-	     } else {
-	           $error = $this->getNovalnetStatusText($responseData);
-		   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
-	     }
 	
-	} catch (\Exception $e) {
-			$this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $e);
-		  }
-	}
-	
-	/**
-     * Update the Plenty payment
-     * Return the Plenty payment object
-     *
-     * @param int $tid
-     * @param int $tid_status
-     * @param int $orderId
-     * @return null
-     */
-	public function updatePayments($tid, $tid_status, $orderId)
-    {	  
-        $payments = $this->paymentRepository->getPaymentsByOrderId($orderId);
-	    
-		foreach ($payments as $payment) {
-        $paymentProperty     = [];
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $tid);
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $tid);
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
-		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $tid_status);
-        $payment->properties = $paymentProperty;   
-	
-		$this->paymentRepository->updatePayment($payment);
-		}	   
-    }
 	public function dateFormatter($days) {
 		return date( 'Y-m-d', strtotime( date( 'y-m-d' ) . '+ ' . $days . ' days' ) );
 	}
