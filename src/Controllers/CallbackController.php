@@ -466,7 +466,7 @@ class CallbackController extends Controller
 							}
 							$this->sendTransactionConfirmMail($callbackComments, $transactionDetails, $nnTransactionHistory->orderNo); 
 					} 
-					$this->updatePayments($this->aryCaptureParams['tid'], $this->aryCaptureParams['tid_status'], $nnTransactionHistory->orderNo);
+					$this->paymentHelper->updatePayments($this->aryCaptureParams['tid'], $this->aryCaptureParams['tid_status'], $nnTransactionHistory->orderNo);
 					return $this->renderTemplate($callbackComments);
 				}  elseif('PRZELEWY24' == $this->aryCaptureParams['payment_type'] && (!in_array($this->aryCaptureParams['tid_status'], ['100','86']) || '100' != $this->aryCaptureParams['status'])){
 					// Przelewy24 cancel.
