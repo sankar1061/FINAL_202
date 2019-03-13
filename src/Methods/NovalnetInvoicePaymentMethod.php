@@ -20,7 +20,6 @@ use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Plugin\Application;
 use Novalnet\Helper\PaymentHelper;
-use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Plugin\Log\Loggable;
 /**
  * Class NovalnetPaymentMethod
@@ -120,11 +119,5 @@ class NovalnetInvoicePaymentMethod extends PaymentMethodService
         return false;
     }
     
-    public function billingAddress () {
-	    $bill = getCustomerInvoiceAddressId();
-	    $this->getLogger(__METHOD__)->error('bill',$bill );
-	    return $bill;
-	
-    }
 	    
 }
