@@ -620,7 +620,7 @@ class PaymentHelper
 	 * @param bool $capture
 	 * @return none
 	 */
-	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $bank_name, $capture=false) 
+	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $InvoicePrepaymentDetails, $capture=false) 
 	{
 		$this->getLogger(__METHOD__)->error('name', $bank_name);
 	try {
@@ -655,10 +655,14 @@ class PaymentHelper
 	    
 			$this->createPlentyPayment($paymentData);
 		    }
-		     $transactionComments .= $bank_name;
-		    $transactionComments = PHP_EOL . sprintf($this->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
+		     $transactionComments = '';
+		     if (in_array($key, ['27','41'])) {
+		     $invoicePrepaymentDetails['tid'] = $tid;
+		     $transactionComments .= $this->paymentService->getInvoicePrepaymentComments($invoicePrepaymentDetails);
+		     }
+	             $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 	      } else {
-		    $transactionComments = PHP_EOL . sprintf($this->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
+		    $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 	      }
 		    $this->createOrderComments((int)$order->id, $transactionComments);
 		    $this->updatePayments($tid, $responseData['tid_status'], $order->id);
