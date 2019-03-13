@@ -20,7 +20,7 @@ use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Plugin\Application;
 use Novalnet\Helper\PaymentHelper;
-Plenty\Modules\Frontend\Contracts\Checkout;
+use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Plugin\Log\Loggable;
 /**
  * Class NovalnetPaymentMethod
