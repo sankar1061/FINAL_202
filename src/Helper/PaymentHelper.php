@@ -208,13 +208,13 @@ class PaymentHelper
 		  'invoice_type'      => 'INVOICE',
 		  'invoice_account_holder' => $requestData['invoice_account_holder']
 		];
-  		
+  		$invoiceDetails = json_encode($invoicePrepaymentDetails);
 		$paymentProperty     = [];
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $requestData['tid_status']);
-		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_PAYMENT_TEXT, 'invoice');
+		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_PAYMENT_TEXT, $invoiceDetails);
 		$payment->properties = $paymentProperty;
 
 		$paymentObj = $this->paymentRepository->createPayment($payment);
