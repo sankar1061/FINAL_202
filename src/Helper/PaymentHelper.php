@@ -178,7 +178,7 @@ class PaymentHelper
 	 */
 	public function createPlentyPayment($requestData)
 	{
-		$this->getLogger(__METHOD__)->error('plenty1', $requestData);
+		$this->getLogger(__METHOD__)->error('plenty2', $requestData);
 		/** @var Payment $payment */
 		$payment = pluginApp(\Plenty\Modules\Payment\Models\Payment::class);
 
@@ -194,7 +194,7 @@ class PaymentHelper
 			$payment->status = Payment::STATUS_REFUNDED;
 		}
 		
-		$invoicePrepaymentDetails =  [
+	/*$invoicePrepaymentDetails =  [
 		  'invoice_bankname'  => $requestData['invoice_bankname'],
 		  'invoice_bankplace' => $requestData['invoice_bankplace'],
 		  'amount'            => $requestData['amount'],
@@ -207,14 +207,14 @@ class PaymentHelper
 		  'order_no'          => $requestData['order_no'],
 		  'invoice_type'      => 'INVOICE',
 		  'invoice_account_holder' => $requestData['invoice_account_holder']
-		];
+		];*/
 
 		$paymentProperty     = [];
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $requestData['tid_status']);
-		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_PAYMENT_TEXT, $invoicePrepaymentDetails);
+		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_PAYMENT_TEXT, $requestData['invoice_bankname']);
 		$payment->properties = $paymentProperty;
 
 		$paymentObj = $this->paymentRepository->createPayment($payment);
