@@ -197,14 +197,9 @@ class PaymentHelper
 	$invoicePrepaymentDetails =  [
 		  'invoice_bankname'  => $requestData['invoice_bankname'],
 		  'invoice_bankplace' => $requestData['invoice_bankplace'],
-		  'amount'            => $requestData['amount'],
-		  'currency'          => $requestData['currency'],
-		  'tid'               => $requestData['tid'],
 		  'invoice_iban'      => $requestData['invoice_iban'],
 		  'invoice_bic'       => $requestData['invoice_bic'],
 		  'due_date'          => $requestData['due_date'],
-		  'product'           => $requestData['product'],
-		  'order_no'          => $requestData['order_no'],
 		  'invoice_type'      => 'INVOICE',
 		  'invoice_account_holder' => $requestData['invoice_account_holder']
 		];
