@@ -81,12 +81,16 @@ class CaptureEventProcedure
 				  {
 					$status = $proper->value;
 				  }
+				 if ($proper->typeId == 22) 
+				 {
+					 $bank_name = $proper->value;
+				 }
 			}
 		}
 	    
         $this->getLogger(__METHOD__)->error('EventProcedure.triggerFunction', ['order' => $order]);
 	    if(in_array($status, ['85', '91', '98', '99'])) {
-        $this->paymentHelper->doCaptureVoid($order, $paymentDetails, $tid, $key, true);
+        $this->paymentHelper->doCaptureVoid($order, $paymentDetails, $tid, $key, true, $bank_name);
 	    } 
 
     }
