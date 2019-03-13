@@ -620,7 +620,7 @@ class PaymentHelper
 	 * @param bool $capture
 	 * @return none
 	 */
-	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $capture=false) 
+	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $capture=false, $bank_name) 
 	{
 	try {
 	$paymentRequestData = [
@@ -654,6 +654,7 @@ class PaymentHelper
 	    
 			$this->createPlentyPayment($paymentData);
 		    }
+		     $transactionComments .= $bank_name;
 		    $transactionComments = PHP_EOL . sprintf($this->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 	      } else {
 		    $transactionComments = PHP_EOL . sprintf($this->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
