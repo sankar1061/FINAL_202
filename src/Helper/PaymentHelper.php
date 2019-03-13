@@ -178,7 +178,7 @@ class PaymentHelper
 	 */
 	public function createPlentyPayment($requestData)
 	{
-		$this->getLogger(__METHOD__)->error('plenty', $requestData);
+		$this->getLogger(__METHOD__)->error('plenty1', $requestData);
 		/** @var Payment $payment */
 		$payment = pluginApp(\Plenty\Modules\Payment\Models\Payment::class);
 
