@@ -17,7 +17,6 @@ namespace Novalnet\Procedures;
 use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
 use Plenty\Modules\Order\Models\Order;
 use Plenty\Plugin\Log\Loggable;
-use Novalnet\Helper\PaymentHelper;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Novalnet\Services\PaymentService;
 
@@ -27,12 +26,6 @@ use Novalnet\Services\PaymentService;
 class VoidEventProcedure
 {
 	use Loggable;
-	
-	/**
-	 *
-	 * @var PaymentHelper
-	 */
-	private $paymentHelper;
 	
 	/**
 	 *
@@ -47,10 +40,9 @@ class VoidEventProcedure
 	 * @param PaymentService $paymentService
 	 */
 	 
-    public function __construct(PaymentHelper $paymentHelper, 
+    public function __construct(
 								PaymentService $paymentService)
     {
-        $this->paymentHelper   = $paymentHelper;
 	    $this->paymentService  = $paymentService;
 	}	
 	
@@ -88,7 +80,7 @@ class VoidEventProcedure
 	   
         $this->getLogger(__METHOD__)->error('EventProcedure.triggerFunction', ['order' => $order]);
 	    if(in_array($status, ['85', '91', '98', '99'])) {
-        $this->paymentHelper->doCaptureVoid($order, $paymentDetails, $tid, $key, '');
+        $this->paymentService->doCaptureVoid($order, $paymentDetails, $tid, $key, '');
 	    } 
     }
 }
