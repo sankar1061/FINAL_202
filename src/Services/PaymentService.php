@@ -787,7 +787,7 @@ class PaymentService
 	    
 			$this->paymentHelper->createPlentyPayment($paymentData);
 		    	}
-		     $this->getLogger(__METHOD__)->error('bank', $invoicePrepaymentDetails);
+		     $transactionComments .= PHP_EOL . $this->getInvoicePrepaymentComments($invoicePrepaymentDetails);
 	             $transactionComments .= PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		      } else {
 			    $transactionComments .= PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
