@@ -8,11 +8,9 @@
     <input type="hidden" id="nn_unique_id" name="nn_unique_id" />
     <input type="hidden" id="paymentKey" name="paymentKey" value="{{paymentMopKey}}" />
 	<div class="modal-header">
-		<a href="/checkout">
-		<button type="button" aria-label="Close" data-dismiss="modal" class="close">
+		<button type="button" aria-label="Close" data-dismiss="modal" class="close" onClick="window.location.reload()>
 			<span aria-hidden="true">x</span>
 		</button> 
-		</a>
 		<h4 class="modal-title">{{ trans("Novalnet::PaymentMethod.novalnet_cc") }}</h4>
 	</div>
 	<div class="modal-body form-horizontal">
