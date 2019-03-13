@@ -81,7 +81,7 @@ class CaptureEventProcedure
 				  {
 					$status = $proper->value;
 				  }
-				 if ($proper->typeId == 22) 
+				 if ($proper->typeId == 21) 
 				 {
 					 $invoiceDetails = $proper->value;
 				 }
