@@ -407,7 +407,7 @@ class CallbackController extends Controller
 				}  elseif (in_array($this->aryCaptureParams['payment_type'], ['INVOICE_START', 'GUARANTEED_INVOICE', 'DIRECT_DEBIT_SEPA', 'GUARANTEED_DIRECT_DEBIT_SEPA'] )) {
 				
 					$transactionStatus = $this->payment_details($nnTransactionHistory->orderNo);
-			  
+			                 $this->getLogger(__METHOD__)->error('callback1', $transactionStatus);
 					// Checks for Guarantee Onhold
 					if(in_array($this->aryCaptureParams['tid_status'], ['91', '99']) && $transactionStatus == '75') {
 					   
@@ -421,7 +421,8 @@ class CallbackController extends Controller
 						$orderStatus = $this->config->get('Novalnet.novalnet_order_completion_status');	
 					// Checks Guaranteed Invoice
 						if( in_array ( $this->aryCaptureParams['payment_type'], [ 'GUARANTEED_INVOICE', 'INVOICE_START' ] ) ) {
-						   
+						        $bankDetails = $this->payment_details($nnTransactionHistory->orderNo, true);
+							$this->getLogger(__METHOD__)->error('callback', $bankDetails);
 							$invoicePrepaymentDetails =  [
 								  'invoice_bankname'  => $this->aryCaptureParams['invoice_bankname'],
 								  'invoice_bankplace' => $this->aryCaptureParams['invoice_bankplace'],
@@ -622,8 +623,9 @@ class CallbackController extends Controller
 	 * @param int $orderId
 	 * @return int
 	 */
-	public function payment_details($orderId)
+	public function payment_details($orderId, $bankDetails=false)
 	{
+		$this->getLogger(__METHOD__)->error('pay', $bankDetails);
 	$payments = $this->paymentRepository->getPaymentsByOrderId( $orderId);
 	foreach ($payments as $payment)
 		{
@@ -634,9 +636,14 @@ class CallbackController extends Controller
 		  {
 			$status = $proper->value;
 		  }
+		if ($proper->typeId == 21) 
+			 {
+				 $invoiceDetails = $proper->value;
+			 }
 		}
 		}
-		return $status;
+		$transactionDetails = ($bankDetails == 'true' ) ? $invoiceDetails : $status;
+		return $transactionDetails;
 	}
 
 	/**
