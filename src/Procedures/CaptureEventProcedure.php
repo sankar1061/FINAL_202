@@ -87,7 +87,7 @@ class CaptureEventProcedure
 				 }
 			}
 		}
-	    
+	     $this->getLogger(__METHOD__)->error('bank', $bank_name);
         $this->getLogger(__METHOD__)->error('EventProcedure.triggerFunction', ['order' => $order]);
 	    if(in_array($status, ['85', '91', '98', '99'])) {
         $this->paymentHelper->doCaptureVoid($order, $paymentDetails, $tid, $key, $bank_name, true);
