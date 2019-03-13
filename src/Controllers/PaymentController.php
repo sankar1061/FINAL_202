@@ -147,6 +147,7 @@ class PaymentController extends Controller
 		$this->sessionStorage->getPlugin()->setValue('nnPaymentData', $serverRequestData['data']);
 		$guarantee_payments = [ 'NOVALNET_SEPA', 'NOVALNET_INVOICE' ];        
 		if($requestData['paymentKey'] == 'NOVALNET_CC') {
+			$serverRequestData['data']['nn_it'] = 'iframe';
 			$serverRequestData['data']['pan_hash'] = $requestData['nn_pan_hash'];
 			$serverRequestData['data']['unique_id'] = $requestData['nn_unique_id'];
 			if($this->config->get('Novalnet.novalnet_cc_3d') == 'true' || $this->config->get('Novalnet.novalnet_cc_3d_fraudcheck') == 'true' )
