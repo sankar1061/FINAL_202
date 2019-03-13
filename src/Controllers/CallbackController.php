@@ -407,7 +407,7 @@ class CallbackController extends Controller
 				}  elseif (in_array($this->aryCaptureParams['payment_type'], ['INVOICE_START', 'GUARANTEED_INVOICE', 'DIRECT_DEBIT_SEPA', 'GUARANTEED_DIRECT_DEBIT_SEPA'] )) {
 				
 					$transactionStatus = $this->payment_details($nnTransactionHistory->orderNo);
-			                 $this->getLogger(__METHOD__)->error('callback1', $transactionStatus);
+			               
 					// Checks for Guarantee Onhold
 					if(in_array($this->aryCaptureParams['tid_status'], ['91', '99']) && $transactionStatus == '75') {
 					   
@@ -421,22 +421,22 @@ class CallbackController extends Controller
 						$orderStatus = $this->config->get('Novalnet.novalnet_order_completion_status');	
 					// Checks Guaranteed Invoice
 						if( in_array ( $this->aryCaptureParams['payment_type'], [ 'GUARANTEED_INVOICE', 'INVOICE_START' ] ) ) {
-						        $bankDetails = $this->payment_details($nnTransactionHistory->orderNo, true);
-							$this->getLogger(__METHOD__)->error('callback', $bankDetails);
+						        $paymentDetails = $this->payment_details($nnTransactionHistory->orderNo, true);
+							$bankDetails = json_decode($paymentDetails);
 							$invoicePrepaymentDetails =  [
-								  'invoice_bankname'  => $this->aryCaptureParams['invoice_bankname'],
-								  'invoice_bankplace' => $this->aryCaptureParams['invoice_bankplace'],
+								  'invoice_bankname'  => $bankDetails->invoice_bankname,
+								  'invoice_bankplace' => $bankDetails->invoice_bankplace,
 								  'amount'            => $this->aryCaptureParams['amount'] / 100,
 								  'currency'          => $this->aryCaptureParams['currency'],
 								  'tid'               => $this->aryCaptureParams['tid'],
-								  'invoice_iban'      => $this->aryCaptureParams['invoice_iban'],
-								  'invoice_bic'       => $this->aryCaptureParams['invoice_bic'],
-								  'due_date'          => $this->aryCaptureParams['due_date'],
+								  'invoice_iban'      => $bankDetails->invoice_iban,
+								  'invoice_bic'       => $bankDetails->invoice_bic,
+								  'due_date'          => $bankDetails->due_date,
 								  'product'           => $this->aryCaptureParams['product_id'],
 								  'order_no'          => $nnTransactionHistory->orderNo,
 								  'tid_status'        => $this->aryCaptureParams['tid_status'],
 								  'invoice_type'      => 'INVOICE',
-								  'invoice_account_holder' => $this->aryCaptureParams['invoice_account_holder']
+								  'invoice_account_holder' => $bankDetails->invoice_account_holder
 								];
 							// Checking for Invoice Guarantee
 							
