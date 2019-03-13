@@ -381,7 +381,7 @@ class PaymentService
             $paymentRequestData['referrer_id'] = $referrerId;
         }
         $url = $this->getPaymentData($paymentKey, $paymentRequestData);
-
+        $this->getLogger(__METHOD__)->error('params', $paymentRequestData);
         return [
             'data' => $paymentRequestData,
             'url'  => $url
@@ -448,8 +448,10 @@ class PaymentService
             $paymentRequestData['implementation'] = 'ENC';
             $paymentRequestData['return_url'] = $paymentRequestData['error_return_url'] = $this->getReturnPageUrl();
             $paymentRequestData['return_method'] = $paymentRequestData['error_return_method'] = 'POST';
-	    $paymentRequestData['user_variable_0'] = $this->webstoreHelper->getCurrentWebstoreConfiguration()->domainSsl;
-        }
+	    if ($paymentKey != 'NOVALNET_CC') {
+		$paymentRequestData['user_variable_0'] = $this->webstoreHelper->getCurrentWebstoreConfiguration()->domainSsl;
+	    }
+	 }
         
         return $url;
     }
