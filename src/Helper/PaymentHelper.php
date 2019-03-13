@@ -627,9 +627,9 @@ class PaymentHelper
 	 * @param bool $capture
 	 * @return none
 	 */
-	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $InvoicePrepaymentDetails, $capture=false) 
+	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $capture=false) 
 	{
-		$this->getLogger(__METHOD__)->error('name', $InvoicePrepaymentDetails);
+		
 	try {
 	$paymentRequestData = [
 	    'vendor'         => $this->getNovalnetConfig('novalnet_vendor_id'),
