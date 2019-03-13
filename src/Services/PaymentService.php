@@ -345,7 +345,7 @@ class PaymentService
             'auth_code'          => $this->paymentHelper->getNovalnetConfig('novalnet_auth_code'),
             'product'            => $this->paymentHelper->getNovalnetConfig('novalnet_product_id'),
             'tariff'             => $this->paymentHelper->getNovalnetConfig('novalnet_tariff_id'),
-            'test_mode'          => (bool)($this->config->get($testModeKey) == 'true'),
+            'test_mode'          => (int)($this->config->get($testModeKey) == 'true'),
             'first_name'         => $address->firstName,
             'last_name'          => $address->lastName,
             'email'              => $address->email,
