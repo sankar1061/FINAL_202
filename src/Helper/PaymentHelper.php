@@ -618,4 +618,29 @@ class PaymentHelper
 	public function ConvertAmountToSmallerUnit($amount) {
 		return sprintf('%0.2f', $amount) * 100;
 	}
+	
+	/**
+     * Update the Plenty payment
+     * Return the Plenty payment object
+     *
+     * @param int $tid
+     * @param int $tid_status
+     * @param int $orderId
+     * @return null
+     */
+	public function updatePayments($tid, $tid_status, $orderId)
+    {	  
+        $payments = $this->paymentRepository->getPaymentsByOrderId($orderId);
+	    
+		foreach ($payments as $payment) {
+        $paymentProperty     = [];
+        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $tid);
+        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $tid);
+        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
+		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $tid_status);
+        $payment->properties = $paymentProperty;   
+	
+		$this->paymentRepository->updatePayment($payment);
+		}	   
+    }
 }
