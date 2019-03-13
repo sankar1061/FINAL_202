@@ -193,13 +193,28 @@ class PaymentHelper
 			$payment->type = $requestData['type'];
 			$payment->status = Payment::STATUS_REFUNDED;
 		}
+		
+		$invoicePrepaymentDetails =  [
+		  'invoice_bankname'  => $requestData['invoice_bankname'],
+		  'invoice_bankplace' => $requestData['invoice_bankplace'],
+		  'amount'            => $requestData['amount'],
+		  'currency'          => $requestData['currency'],
+		  'tid'               => $requestData['tid'],
+		  'invoice_iban'      => $requestData['invoice_iban'],
+		  'invoice_bic'       => $requestData['invoice_bic'],
+		  'due_date'          => $requestData['due_date'],
+		  'product'           => $requestData['product_id'],
+		  'order_no'          => $requestData['order_no'],
+		  'invoice_type'      => 'INVOICE',
+		  'invoice_account_holder' => $requestData['invoice_account_holder']
+		];
 
 		$paymentProperty     = [];
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $requestData['tid_status']);
-		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_PAYMENT_TEXT, 'invoice');
+		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_PAYMENT_TEXT, $invoicePrepaymentDetails);
 		$payment->properties = $paymentProperty;
 
 		$paymentObj = $this->paymentRepository->createPayment($payment);
