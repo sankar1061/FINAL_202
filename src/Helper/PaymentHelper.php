@@ -199,7 +199,7 @@ class PaymentHelper
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $transactionId);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
 		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $requestData['tid_status']);
-		$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_REFERENCE_TEXT_OF_THE_PAYMENT, 'invoice');
+		//$paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_REFERENCE_TEXT_OF_THE_PAYMENT, 'invoice');
 		$payment->properties = $paymentProperty;
 
 		$paymentObj = $this->paymentRepository->createPayment($payment);
