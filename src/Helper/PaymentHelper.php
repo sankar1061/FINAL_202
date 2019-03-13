@@ -620,7 +620,7 @@ class PaymentHelper
 	 * @param bool $capture
 	 * @return none
 	 */
-	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $capture=false, $bank_name) 
+	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $bank_name, $capture=false) 
 	{
 	try {
 	$paymentRequestData = [
