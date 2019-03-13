@@ -664,7 +664,7 @@ class PaymentHelper
 					  'order_no'          => $order->id,
 					  'tid_status'        => $responseData['tid_status'],
 					  'invoice_type'      => 'INVOICE',
-					  'invoice_account_holder' => $this->aryCaptureParams['invoice_account_holder']
+					  'invoice_account_holder' => $bankDetails->invoice_account_holder
 					];       
 		       		}
 
