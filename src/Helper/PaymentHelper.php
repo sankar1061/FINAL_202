@@ -619,6 +619,7 @@ class PaymentHelper
 	{
 	    $this->getLogger(__METHOD__)->error('capture', $invoiceDetails);
 		$bankDetails = json_decode($invoiceDetails);
+		$this->getLogger(__METHOD__)->error('capture', $bankDetails);
 	try {
 	$paymentRequestData = [
 	    'vendor'         => $this->getNovalnetConfig('novalnet_vendor_id'),
