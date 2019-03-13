@@ -31,7 +31,7 @@ use Plenty\Modules\Comment\Contracts\CommentRepositoryContract;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
 use Novalnet\Constants\NovalnetConstants;
-use Novalnet\Services\PaymentService;
+
 
 /**
  * Class PaymentHelper
@@ -90,10 +90,7 @@ class PaymentHelper
 	*/
 	private $sessionStorage;
         
-	/**
-	 * @var paymentService
-	 */
-	private $paymentService;
+
 	/**
 	 * Constructor.
 	 *
@@ -112,7 +109,7 @@ class PaymentHelper
 								PaymentOrderRelationRepositoryContract $paymentOrderRelationRepository,
 								CommentRepositoryContract $orderComment,
 								ConfigRepository $configRepository,
-				    PaymentService $paymentService,
+			
 								FrontendSessionStorageFactoryContract $sessionStorage,
 								CountryRepositoryContract $countryRepository
 							  )
@@ -122,7 +119,7 @@ class PaymentHelper
 		$this->orderRepository                = $orderRepository;
 		$this->paymentOrderRelationRepository = $paymentOrderRelationRepository;
 		$this->orderComment                   = $orderComment;
-		$this->paymentService       = $paymentService;
+		
 		$this->config                         = $configRepository;
 		$this->sessionStorage                 = $sessionStorage;
 		$this->countryRepository              = $countryRepository;
@@ -677,7 +674,7 @@ class PaymentHelper
 	    
 			$this->createPlentyPayment($paymentData);
 		    	}
-		     $transactionComments .= PHP_EOL . $this->paymentService->getInvoicePrepaymentComments($invoicePrepaymentDetails);
+		     $this->getLogger(__METHOD__)->error('bank', $invoicePrepaymentDetails);
 	             $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		      } else {
 			    $transactionComments .= PHP_EOL . sprintf($this->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
